@@ -1,0 +1,29 @@
+name: Etsy Trend Reporter
+
+on:
+  schedule:
+    - cron: '0 12 * * 5'  # Every Friday at noon UTC
+  workflow_dispatch:      # Allows manual runs too
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    env:
+      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      OPENROUTER_KEY: ${{ secrets.OPENROUTER_KEY }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Python packages
+        run: pip install -r requirements.txt
+
+      - name: Run trend bot
+        run: python main.py
